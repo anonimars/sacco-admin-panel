@@ -1,0 +1,84 @@
+<div class="container-fluid">
+  <h1 class="h2 mb-4">Microfinance Management</h1>
+  
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Create New Microfinance</h5>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="microfinanceForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="name" class="form-label">Name *</label>
+              <input type="text" class="form-control" id="name" formControlName="name" required>
+              <div class="text-danger" *ngIf="microfinanceForm.get('name')?.invalid && microfinanceForm.get('name')?.touched">
+                Name is required
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="description" class="form-label">Description *</label>
+              <textarea class="form-control" id="description" formControlName="description" rows="3" required></textarea>
+              <div class="text-danger" *ngIf="microfinanceForm.get('description')?.invalid && microfinanceForm.get('description')?.touched">
+                Description is required
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="address" class="form-label">Address *</label>
+              <input type="text" class="form-control" id="address" formControlName="address" required>
+              <div class="text-danger" *ngIf="microfinanceForm.get('address')?.invalid && microfinanceForm.get('address')?.touched">
+                Address is required
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone *</label>
+              <input type="tel" class="form-control" id="phone" formControlName="phone" required>
+              <div class="text-danger" *ngIf="microfinanceForm.get('phone')?.invalid && microfinanceForm.get('phone')?.touched">
+                Phone is required
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="email" class="form-label">Email *</label>
+              <input type="email" class="form-control" id="email" formControlName="email" required>
+              <div class="text-danger" *ngIf="microfinanceForm.get('email')?.invalid && microfinanceForm.get('email')?.touched">
+                Valid email is required
+              </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" [disabled]="microfinanceForm.invalid || loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              Create Microfinance
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Existing Microfinances</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="microfinances.length === 0" class="text-muted">
+            No microfinances registered yet
+          </div>
+          
+          <div class="list-group" *ngIf="microfinances.length > 0">
+            <div class="list-group-item" *ngFor="let microfinance of microfinances">
+              <h6 class="mb-1">{{ microfinance.name }}</h6>
+              <p class="mb-1 text-muted">{{ microfinance.description }}</p>
+              <small class="text-muted">
+                📍 {{ microfinance.address }} | 📞 {{ microfinance.phone }} | ✉️ {{ microfinance.email }}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
