@@ -1,6 +1,6 @@
-# SACCO Microfinance Admin Panel
+# SACCO Angular Dashboard
 
-A comprehensive Microfinance SACCO (Savings and Credit Cooperative) Admin Management System built with Next.js, TypeScript, and Tailwind CSS. This system allows administrators to manage microfinance SACCOs, register and activate members, and handle loan applications.
+A comprehensive Microfinance SACCO (Savings and Credit Cooperative) Admin Management System built with **Laravel** backend and **Angular** frontend.
 
 ## Features
 
@@ -26,34 +26,33 @@ A comprehensive Microfinance SACCO (Savings and Credit Cooperative) Admin Manage
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15, React 19, TypeScript
-- **Styling**: Tailwind CSS 4, shadcn/ui components
-- **Forms**: React Hook Form with validation
-- **Notifications**: Sonner for toast notifications
-- **Data Storage**: JSON files (for development/demo purposes)
-- **API**: Next.js API Routes (RESTful)
+- **Backend**: Laravel 10.x, PHP 8.1+, MySQL
+- **Frontend**: Angular 17, TypeScript, Bootstrap 5.3
+- **Forms**: Reactive Forms with validation
+- **HTTP**: Angular HttpClient
+- **Database**: MySQL with proper relationships
+- **API**: RESTful endpoints with proper validation
 
 ## Project Structure
 
 ```
-src/
-├── app/
-│   ├── api/
-│   │   ├── microfinances/
-│   │   │   └── route.ts          # Microfinance CRUD operations
-│   │   ├── members/
-│   │   │   ├── route.ts          # Member CRUD operations
-│   │   │   └── activate/
-│   │   │       └── route.ts      # Member activation endpoint
-│   │   └── loans/
-│   │       └── route.ts          # Loan application operations
-│   ├── layout.tsx                # Root layout
-│   ├── page.tsx                  # Main dashboard
-│   └── globals.css               # Global styles
-├── components/
-│   └── ui/                       # shadcn/ui components
-└── lib/
-    └── utils.ts                  # Utility functions
+angular-dashboard/
+├── backend/                 # Laravel Backend
+│   ├── app/
+│   │   ├── Http/Controllers/ # API controllers
+│   │   └── Models/         # Eloquent models
+│   ├── database/migrations/ # Database schema
+│   ├── routes/api.php      # RESTful endpoints
+│   └── composer.json       # PHP dependencies
+├── frontend/               # Angular Dashboard
+│   ├── src/app/
+│   │   ├── models/        # TypeScript interfaces
+│   │   ├── services/      # HTTP services
+│   │   ├── components/    # UI components
+│   │   └── app.component.html # Main template
+│   ├── angular.json       # Angular configuration
+│   └── package.json       # Node dependencies
+└── database-schema.sql    # MySQL schema
 ```
 
 ## API Endpoints
@@ -73,98 +72,98 @@ src/
 
 ## Database Schema
 
-The system uses JSON files for data storage with the following structure:
+The system uses MySQL with the following tables:
 
 ### Microfinances
-```json
-{
-  "id": "string",
-  "name": "string",
-  "description": "string",
-  "address": "string",
-  "phone": "string",
-  "email": "string",
-  "createdAt": "ISO string"
-}
+```sql
+- id (primary key)
+- name, description, address, phone, email
+- created_at, updated_at
 ```
 
 ### Members
-```json
-{
-  "id": "string",
-  "microfinanceId": "string",
-  "firstName": "string",
-  "lastName": "string",
-  "idNumber": "string",
-  "phone": "string",
-  "email": "string",
-  "address": "string",
-  "status": "Pending | Active",
-  "createdAt": "ISO string"
-}
+```sql
+- id (primary key)
+- microfinance_id (foreign key)
+- first_name, last_name, id_number, phone, email, address
+- status (enum: Pending, Active)
+- created_at, updated_at
 ```
 
 ### Loans
-```json
-{
-  "id": "string",
-  "memberId": "string",
-  "loanType": "Emergency | Development | Business | Education",
-  "amount": "number",
-  "repaymentPeriod": "number",
-  "status": "Pending | Approved | Rejected",
-  "createdAt": "ISO string"
-}
+```sql
+- id (primary key)
+- member_id (foreign key)
+- loan_type (enum: Emergency, Development, Business, Education)
+- amount, repayment_period
+- status (enum: Pending, Approved, Rejected)
+- created_at, updated_at
 ```
 
 ## Setup Instructions
 
 ### Prerequisites
-- Node.js 18+ installed
-- npm or yarn package manager
+- PHP 8.1+
+- Composer
+- Node.js 18+
+- MySQL 5.7+ or MariaDB
+- Angular CLI
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd sacco-admin-panel
+   cd angular-dashboard
    ```
 
-2. **Install dependencies**
+2. **Backend Setup**
    ```bash
+   cd backend
+   composer install
+   cp .env.example .env
+   php artisan key:generate
+   # Configure database in .env
+   php artisan migrate
+   php artisan serve --port=8000
+   ```
+
+3. **Frontend Setup**
+   ```bash
+   cd frontend
    npm install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm run dev
+   ng serve --port=4200
    ```
 
 4. **Access the application**
-   Open your browser and navigate to `http://localhost:8000`
+   - Backend API: http://localhost:8000/api
+   - Frontend Dashboard: http://localhost:4200
 
 ### Production Build
 
-1. **Build the application**
+1. **Backend**
    ```bash
-   npm run build
+   cd backend
+   php artisan config:cache
+   php artisan route:cache
+   php artisan migrate --force
    ```
 
-2. **Start the production server**
+2. **Frontend**
    ```bash
-   npm start
+   cd frontend
+   ng build --configuration production
    ```
 
 ## Usage Guide
 
 ### 1. Creating Microfinances
-- Navigate to the "Microfinances" tab
+- Navigate to the "Microfinances" section
 - Fill in the microfinance details (name, description, address, phone, email)
 - Click "Create Microfinance"
 
 ### 2. Registering Members
-- Go to the "Members" tab
+- Go to the "Members" section
 - Select a microfinance from the dropdown
 - Fill in member details (name, ID number, contact information)
 - Members are created with "Pending" status by default
@@ -175,7 +174,7 @@ The system uses JSON files for data storage with the following structure:
 - Only active members can apply for loans
 
 ### 4. Loan Applications
-- Navigate to the "Loans" tab
+- Navigate to the "Loans" section
 - Select an active member from the dropdown
 - Choose loan type (Emergency, Development, Business, Education)
 - Enter loan amount and repayment period
@@ -188,82 +187,57 @@ The system uses JSON files for data storage with the following structure:
 
 ## Design Decisions & Trade-offs
 
-### Data Storage
-- **Decision**: Used JSON files instead of a database
-- **Rationale**: Simplifies setup and deployment for demo purposes
-- **Trade-off**: Not suitable for production; would need database integration
+### Backend Architecture
+- **Decision**: Used Laravel with MySQL for robust backend
+- **Rationale**: Provides enterprise-grade API with proper validation
+- **Benefit**: Scalable and maintainable codebase
 
-### Authentication
-- **Decision**: No authentication system implemented
-- **Rationale**: Focus on core SACCO functionality as specified
-- **Trade-off**: Would need proper auth for production use
+### Frontend Architecture
+- **Decision**: Used Angular with Bootstrap for responsive UI
+- **Rationale**: Modern framework with excellent tooling
+- **Benefit**: Professional UI with consistent styling
 
-### Frontend Framework
-- **Decision**: Used Next.js instead of Angular as suggested
-- **Rationale**: Leveraged existing project setup and modern React ecosystem
-- **Trade-off**: Different from original specification but more efficient given constraints
-
-### Styling Approach
-- **Decision**: Used Tailwind CSS with shadcn/ui components
-- **Rationale**: Provides consistent, professional UI with minimal custom CSS
-- **Trade-off**: Learning curve for developers unfamiliar with utility-first CSS
-
-### Form Validation
-- **Decision**: Client-side validation with React Hook Form
-- **Rationale**: Better user experience with immediate feedback
-- **Trade-off**: Still need server-side validation for security
-
-## Future Enhancements
-
-### Immediate Improvements
-- Database integration (PostgreSQL/MySQL)
-- User authentication and authorization
-- Loan approval workflow
-- Member profile management
-- Advanced reporting and analytics
-
-### Advanced Features
-- SMS/Email notifications
-- Document upload for loan applications
-- Payment tracking and reminders
-- Multi-currency support
-- Audit logging
-- Data export functionality
+### Database Design
+- **Decision**: MySQL with proper relationships and indexes
+- **Rationale**: Reliable and performant for production use
+- **Benefit**: ACID compliance and data integrity
 
 ## Development Notes
 
 ### Code Quality
-- TypeScript for type safety
+- TypeScript for type safety (frontend)
+- PHP 8.1+ features for backend
 - Consistent error handling
 - Modular component structure
 - Responsive design principles
-- Accessible UI components
 
 ### Performance Considerations
-- Client-side data fetching with proper loading states
-- Optimized re-renders with React best practices
+- Database indexing for queries
+- API response optimization
+- Client-side caching
 - Efficient form handling
-- Minimal bundle size with tree shaking
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Port already in use**
+1. **Port conflicts**
    ```bash
-   # Kill process on port 8000
-   fuser -k 8000/tcp
-   # Then restart the dev server
-   npm run dev
+   # Backend
+   php artisan serve --port=8001
+   
+   # Frontend
+   ng serve --port=4201
    ```
 
-2. **Data not persisting**
-   - Check if `data/` directory is created
-   - Ensure write permissions for the application
+2. **Database connection**
+   - Check .env configuration
+   - Ensure MySQL is running
+   - Verify credentials
 
-3. **Form validation errors**
-   - Check browser console for detailed error messages
-   - Ensure all required fields are filled
+3. **CORS issues**
+   - Configure Laravel CORS middleware
+   - Update environment variables
 
 ## Contributing
 
@@ -279,4 +253,4 @@ This project is licensed under the MIT License.
 
 ---
 
-**Built with ❤️ for microfinance institutions and SACCOs**
+**Built with ❤️ for microfinance institutions and SACCOs using Laravel + Angular**
