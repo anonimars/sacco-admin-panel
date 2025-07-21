@@ -1,0 +1,6 @@
+{
+  "/api/loans/route": "app/api/loans/route.js",
+  "/api/members/route": "app/api/members/route.js",
+  "/api/microfinances/route": "app/api/microfinances/route.js",
+  "/page": "app/page.js"
+}
