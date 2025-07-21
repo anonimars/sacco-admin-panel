@@ -1,0 +1,71 @@
+<div class="container-fluid">
+  <h1 class="h2 mb-4">SACCO Admin Dashboard</h1>
+  
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-white bg-primary">
+        <div class="card-body">
+          <h5 class="card-title">Microfinances</h5>
+          <h2 class="card-text">{{ microfinances.length }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <h5 class="card-title">Active Members</h5>
+          <h2 class="card-text">{{ activeMembersCount }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-warning">
+        <div class="card-body">
+          <h5 class="card-title">Pending Loans</h5>
+          <h2 class="card-text">{{ pendingLoansCount }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-info">
+        <div class="card-body">
+          <h5 class="card-title">Total Approved</h5>
+          <h2 class="card-text">KSh {{ totalApprovedAmount | number }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Recent Activity</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="recentActivity.length === 0" class="text-muted">
+            No recent activity
+          </div>
+          <ul class="list-group list-group-flush" *ngIf="recentActivity.length > 0">
+            <li class="list-group-item" *ngFor="let activity of recentActivity">
+              {{ activity.description }}
+              <small class="text-muted float-end">{{ activity.date | date:'short' }}</small>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">System Status</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Database:</strong> <span class="badge bg-success">Connected</span></p>
+          <p><strong>API Status:</strong> <span class="badge bg-success">Online</span></p>
+          <p><strong>Last Updated:</strong> {{ lastUpdated | date:'medium' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
